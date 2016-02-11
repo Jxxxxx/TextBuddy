@@ -17,6 +17,7 @@ public class TextBuddy {
     private static final String MESSAGE_DELETED = "deleted from %1$s: \"%2$s\"";
     private static final String MESSAGE_CLEARED = "all content deleted from %1$s";
     private static final String MESSAGE_INVALID = "Error. Invalid command.";
+    private static final String MESSAGE_EXIT = "Goodbye!";
     
     private static final int PARAM_SIZE_FOR_RUNNING = 1;
     private static final boolean NEW_LINE_ENABLED = true;
@@ -97,7 +98,8 @@ public class TextBuddy {
                 break;
                 
             case "exit" :
-                saveAndExit(fileName);
+                save(fileName);
+                exit();
                 break;
                 
             default :
@@ -172,16 +174,24 @@ public class TextBuddy {
         showToUser((String.format(MESSAGE_CLEARED, fileName)), NEW_LINE_ENABLED);
     }
     
-    private static void saveAndExit(String fileName) throws IOException {
-        File file = new File(fileName);
-        BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+    private static void save(String fileName) throws IOException {
+        writeToFile(fileName);
+    }
+    
+    private static void exit() {
+    	showToUser(MESSAGE_EXIT, NEW_LINE_ENABLED);
+    	System.exit(0);
+    }
+
+	private static void writeToFile(String fileName) throws IOException {
+		File file = new File(fileName);
+        BufferedWriter writer = new BufferedWriter(new FileWriter(file));
         
         for (int i = 0; i < contents.size(); i++) {
-            bw.write(contents.get(i));
-            bw.newLine();
+            writer.write(contents.get(i));
+            writer.newLine();
         }
         
-        bw.close();
-        System.exit(0);
-    }
+        writer.close();
+	}
 }
