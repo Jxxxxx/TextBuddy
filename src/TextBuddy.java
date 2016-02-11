@@ -133,17 +133,7 @@ public class TextBuddy {
         deleting(index, canDelete);
     }
 
-	private static void deleting(int index, boolean canDelete) {
-		if (canDelete) {
-        	index = index - OFFSET_FOR_ZERO;
-            String deleted = contents.remove(index);
-            showToUser((String.format(MESSAGE_DELETED, fileName, deleted)), NEW_LINE_ENABLED);
-        } else {
-            showToUser(MESSAGE_INVALID, NEW_LINE_ENABLED);
-        }
-	}
-
-	private static int getDeleteIndex() {
+    private static int getDeleteIndex() {
 		int index = 0;     
 		
         try {
@@ -169,6 +159,16 @@ public class TextBuddy {
         return true;
     }
     
+	private static void deleting(int index, boolean canDelete) {
+		if (canDelete) {
+        	index = index - OFFSET_FOR_ZERO;
+            String deleted = contents.remove(index);
+            showToUser((String.format(MESSAGE_DELETED, fileName, deleted)), NEW_LINE_ENABLED);
+        } else {
+            showToUser(MESSAGE_INVALID, NEW_LINE_ENABLED);
+        }
+	}
+	
     private static void clear() {
         contents.clear();
         showToUser((String.format(MESSAGE_CLEARED, fileName)), NEW_LINE_ENABLED);
@@ -176,11 +176,6 @@ public class TextBuddy {
     
     private static void save(String fileName) throws IOException {
         writeToFile(fileName);
-    }
-    
-    private static void exit() {
-    	showToUser(MESSAGE_EXIT, NEW_LINE_ENABLED);
-    	System.exit(0);
     }
 
 	private static void writeToFile(String fileName) throws IOException {
@@ -194,4 +189,9 @@ public class TextBuddy {
         
         writer.close();
 	}
+	
+	private static void exit() {
+    	showToUser(MESSAGE_EXIT, NEW_LINE_ENABLED);
+    	System.exit(0);
+    }
 }
