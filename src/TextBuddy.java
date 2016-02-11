@@ -52,12 +52,12 @@ public class TextBuddy {
         if (!file.exists()) {
             file.createNewFile();
         } else {
-            BufferedReader br = new BufferedReader(new FileReader(file));
+            BufferedReader reader = new BufferedReader(new FileReader(file));
             String existing = "";
-            while ((existing = br.readLine()) != null) {
+            while ((existing = reader.readLine()) != null) {
                 contents.add(existing);
             }
-            br.close();
+            reader.close();
         }
     }
     
