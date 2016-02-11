@@ -194,7 +194,7 @@ public class TextBuddy {
         }
 	}
 	
-    public static void clear() {
+    private static void clear() {
         contents.clear();
         showToUser((String.format(MESSAGE_CLEARED, fileName)), NEW_LINE_ENABLED);
     }
