@@ -1,0 +1,181 @@
+import java.util.Scanner;
+import java.util.ArrayList;
+import java.io.IOException;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+
+public class TextBuddy {
+    
+    private static final String MESSAGE_USAGE = "Usage: java textbuddy <file path>";
+    private static final String MESSAGE_WELCOME = "Welcome to Textbuddy!";
+    private static final String MESSAGE_PROMPT = "command: ";
+    private static final String MESSAGE_ADDED = "added to %1$s: \"%2$s\"";
+    private static final String MESSAGE_EMPTY_FILE = "%1$s is empty";
+    private static final String MESSAGE_DELETED = "deleted from %1$s: \"%2$s\"";
+    private static final String MESSAGE_CLEARED = "all content deleted from %1$s";
+    private static final String MESSAGE_INVALID = "Error. Invalid command.";
+    
+    private static final int PARAM_SIZE_FOR_RUNNING = 1;
+    private static final int NEW_LINE_ENABLED = 1;
+    private static final int NEW_LINE_DISABLED = 0;
+    private static final int FILE_CONTENT_EMPTY = 0;
+    private static final int OFFSET_FOR_ZERO = 1;
+    
+    private static Scanner scanner = new Scanner(System.in);
+    private static String fileName = null;
+    private static ArrayList<String> contents = new ArrayList<String>();
+    
+    public static void main(String[] args) throws IOException {
+        checkProperUsage(args.length);
+        setFileName(args);
+        prepareFile(fileName);
+        showToUser(MESSAGE_WELCOME, NEW_LINE_ENABLED);
+        commandPrompt();
+    }
+    
+    private static void checkProperUsage(int length) {
+        if (length != PARAM_SIZE_FOR_RUNNING) {
+            showToUser(MESSAGE_USAGE, NEW_LINE_ENABLED);
+            System.exit(1);
+        }
+    }
+    
+    private static void setFileName(String[] args) {
+        fileName = args[0];
+    }
+    
+    private static void prepareFile(String fileName) throws IOException {
+        File file = new File(fileName);
+        if (!file.exists()) {
+            file.createNewFile();
+        } else {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String existing = "";
+            while ((existing = br.readLine()) != null) {
+                contents.add(existing);
+            }
+            br.close();
+        }
+    }
+    
+    private static void showToUser(String text, int hasNewLine) {
+        if (hasNewLine == 1) {
+            System.out.println(text);
+        } else {
+            System.out.print(text);
+        }
+    }
+    
+    private static void commandPrompt() throws IOException {
+        while (true) {
+            showToUser(MESSAGE_PROMPT, NEW_LINE_DISABLED);
+            executeCommand();
+        }
+    }
+    
+    private static void executeCommand() throws IOException {
+        String command = scanner.next();
+        
+        switch (command) {
+            case "add"  :
+                add();
+                break;
+                
+            case "display" :
+                display();
+                break;
+                
+            case "delete" :
+                delete();
+                break;
+                
+            case "clear" :
+                clear();
+                break;
+                
+            case "exit" :
+                saveAndExit(fileName);
+                break;
+                
+            default :
+                showToUser(MESSAGE_INVALID, NEW_LINE_ENABLED);
+                break;
+        }
+    }
+    
+    private static void add() {
+        String input = scanner.nextLine().trim();
+        contents.add(input);
+        showToUser((String.format(MESSAGE_ADDED, fileName, input)), NEW_LINE_ENABLED);
+    }
+    
+    private static void display() {
+        if (contents.size() == FILE_CONTENT_EMPTY) {
+            showToUser((String.format(MESSAGE_EMPTY_FILE, fileName)), NEW_LINE_ENABLED);
+        } else {
+            int index = 1;
+            for (int i = 0; i < contents.size(); i++) {
+                showToUser(index + ".", NEW_LINE_DISABLED);
+                showToUser(contents.get(i), NEW_LINE_ENABLED);
+                index++;
+            }
+        }
+    }
+    
+    private static void delete() {
+        int index = 0;
+        
+        try {
+            index = scanner.nextInt();
+        } catch (Exception e) {
+            showToUser(MESSAGE_INVALID, NEW_LINE_ENABLED);
+            scanner.next();
+            return;
+        }
+        
+        boolean canDelete = checkBeforeDelete(index);
+        
+        index = index - OFFSET_FOR_ZERO;
+        if (canDelete) {
+            String deleted = contents.remove(index);
+            showToUser((String.format(MESSAGE_DELETED, fileName, deleted)), NEW_LINE_ENABLED);
+        } else {
+            showToUser(MESSAGE_INVALID, NEW_LINE_ENABLED);
+        }
+    }
+    
+    private static boolean checkBeforeDelete(int index) {
+        if (contents.size() == FILE_CONTENT_EMPTY) {
+            showToUser((String.format(MESSAGE_EMPTY_FILE, fileName)), NEW_LINE_ENABLED);
+        }
+        
+        if (index <= 0) {
+            return false;
+        } else if (index > contents.size()) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    private static void clear() {
+        contents.clear();
+        showToUser((String.format(MESSAGE_CLEARED, fileName)), NEW_LINE_ENABLED);
+    }
+    
+    private static void saveAndExit(String fileName) throws IOException {
+        File file = new File(fileName);
+        BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+        
+        for (int i = 0; i < contents.size(); i++) {
+            bw.write(contents.get(i));
+            bw.newLine();
+        }
+        
+        bw.close();
+        System.exit(0);
+    }
+}
