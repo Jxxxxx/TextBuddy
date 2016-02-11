@@ -19,8 +19,8 @@ public class TextBuddy {
     private static final String MESSAGE_INVALID = "Error. Invalid command.";
     
     private static final int PARAM_SIZE_FOR_RUNNING = 1;
-    private static final int NEW_LINE_ENABLED = 1;
-    private static final int NEW_LINE_DISABLED = 0;
+    private static final boolean NEW_LINE_ENABLED = true;
+    private static final boolean NEW_LINE_DISABLED = false;
     private static final int FILE_CONTENT_EMPTY = 0;
     private static final int OFFSET_FOR_ZERO = 1;
     
@@ -61,8 +61,8 @@ public class TextBuddy {
         }
     }
     
-    private static void showToUser(String text, int hasNewLine) {
-        if (hasNewLine == 1) {
+    private static void showToUser(String text, boolean hasNewLine) {
+        if (hasNewLine == true) {
             System.out.println(text);
         } else {
             System.out.print(text);
