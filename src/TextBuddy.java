@@ -7,6 +7,19 @@ import java.io.FileWriter;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 
+/**
+ * TextBuddy program allows user to manipulate text in file through basic functions such as
+ * add, delete, display, clear, exit.
+ * 
+ * Assumptions:
+ * File being specified will be a text file.
+ * If the text file being specified exists, it will be in the same directory as the program.
+ * User have to exit the program before all the changes made will be saved.
+ * 
+ * @author Joleeen
+ *
+ */
+
 public class TextBuddy {
     
     private static final String MESSAGE_USAGE = "Usage: java textbuddy <file path>";
@@ -48,6 +61,13 @@ public class TextBuddy {
         fileName = args[0];
     }
     
+    /**
+     * Checks if the file specified exist
+     * If it doesn't, create new file
+     * If it does, read the existing content
+     * @param fileName
+     * @throws IOException
+     */
     private static void prepareFile(String fileName) throws IOException {
         File file = new File(fileName);
         if (!file.exists()) {
@@ -145,6 +165,12 @@ public class TextBuddy {
 		return index;
 	}
     
+    
+    /**
+     * Check that file is not empty, or that index specify is not out of range
+     * @param index
+     * @return
+     */
     private static boolean checkBeforeDelete(int index) {
         if (contents.size() == FILE_CONTENT_EMPTY) {
             showToUser((String.format(MESSAGE_EMPTY_FILE, fileName)), NEW_LINE_ENABLED);
@@ -178,6 +204,12 @@ public class TextBuddy {
         writeToFile(fileName);
     }
 
+	/**
+	 * Writes the existing contents in array list to file in order to save it
+	 * 
+	 * @param fileName
+	 * @throws IOException
+	 */
 	private static void writeToFile(String fileName) throws IOException {
 		File file = new File(fileName);
         BufferedWriter writer = new BufferedWriter(new FileWriter(file));
