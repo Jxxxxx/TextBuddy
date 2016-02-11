@@ -54,8 +54,8 @@ public class TextBuddy {
             file.createNewFile();
         } else {
             BufferedReader reader = new BufferedReader(new FileReader(file));
-            String existing = "";
-            while ((existing = reader.readLine()) != null) {
+            String existing = reader.readLine();
+            while (existing != null) {
                 contents.add(existing);
             }
             reader.close();
