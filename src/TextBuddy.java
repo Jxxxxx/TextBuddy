@@ -33,7 +33,7 @@ public class TextBuddy {
         setFileName(args);
         prepareFile(fileName);
         showToUser(MESSAGE_WELCOME, NEW_LINE_ENABLED);
-        commandPrompt();
+        askForInput();
     }
     
     private static void checkProperUsage(int length) {
@@ -69,7 +69,7 @@ public class TextBuddy {
         }
     }
     
-    private static void commandPrompt() throws IOException {
+    private static void askForInput() throws IOException {
         while (true) {
             showToUser(MESSAGE_PROMPT, NEW_LINE_DISABLED);
             executeCommand();
