@@ -93,13 +93,12 @@ public class TextBuddy {
     private static void askForInput() throws IOException {
         while (true) {
             showToUser(MESSAGE_PROMPT, NEW_LINE_DISABLED);
-            executeCommand();
+            String command = scanner.next();
+            executeCommand(command);
         }
     }
     
-    private static void executeCommand() throws IOException {
-        String command = scanner.next();
-        
+    private static void executeCommand(String command) throws IOException {
         switch (command) {
             case "add"  :
                 add();
@@ -195,7 +194,7 @@ public class TextBuddy {
         }
 	}
 	
-    private static void clear() {
+    public static void clear() {
         contents.clear();
         showToUser((String.format(MESSAGE_CLEARED, fileName)), NEW_LINE_ENABLED);
     }
