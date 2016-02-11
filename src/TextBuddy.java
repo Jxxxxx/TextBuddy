@@ -126,26 +126,32 @@ public class TextBuddy {
     }
     
     private static void delete() {
-        int index = 0;
-        
-        try {
-            index = scanner.nextInt();
-        } catch (Exception e) {
-            showToUser(MESSAGE_INVALID, NEW_LINE_ENABLED);
-            scanner.next();
-            return;
-        }
-        
+        int index = getDeleteIndex();
         boolean canDelete = checkBeforeDelete(index);
-        
-        index = index - OFFSET_FOR_ZERO;
-        if (canDelete) {
+        deleting(index, canDelete);
+    }
+
+	private static void deleting(int index, boolean canDelete) {
+		if (canDelete) {
+        	index = index - OFFSET_FOR_ZERO;
             String deleted = contents.remove(index);
             showToUser((String.format(MESSAGE_DELETED, fileName, deleted)), NEW_LINE_ENABLED);
         } else {
             showToUser(MESSAGE_INVALID, NEW_LINE_ENABLED);
         }
-    }
+	}
+
+	private static int getDeleteIndex() {
+		int index = 0;     
+		
+        try {
+            index = scanner.nextInt();
+        } catch (Exception e) {
+            showToUser(MESSAGE_INVALID, NEW_LINE_ENABLED);
+            scanner.next();
+        }
+		return index;
+	}
     
     private static boolean checkBeforeDelete(int index) {
         if (contents.size() == FILE_CONTENT_EMPTY) {
