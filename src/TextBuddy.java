@@ -98,7 +98,7 @@ public class TextBuddy {
         }
     }
     
-    private static void executeCommand(String command) throws IOException {
+    public static void executeCommand(String command) throws IOException {
         switch (command) {
             case "add"  :
                 add();
@@ -164,7 +164,6 @@ public class TextBuddy {
 		return index;
 	}
     
-    
     /**
      * Check that file is not empty, or that index specify is not out of range
      * @param index
@@ -225,4 +224,14 @@ public class TextBuddy {
     	showToUser(MESSAGE_EXIT, NEW_LINE_ENABLED);
     	System.exit(0);
     }
+	
+	
+	/**
+	 * Testing methods below
+	 *
+	 */
+	
+	public static int getLineCount() {
+		return contents.size();
+	}
 }
