@@ -1,5 +1,7 @@
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.io.IOException;
 import java.io.File;
 import java.io.FileReader;
@@ -113,6 +115,10 @@ public class TextBuddy {
                 delete();
                 break;
                 
+            case "sort" :
+            	sort();
+            	break;
+                
             case "clear" :
                 clear();
                 break;
@@ -192,6 +198,10 @@ public class TextBuddy {
         } else {
             showToUser(MESSAGE_INVALID, NEW_LINE_ENABLED);
         }
+	}
+	
+	private static void sort() {
+		 Collections.sort(contents, String.CASE_INSENSITIVE_ORDER);
 	}
 	
     private static void clear() {
