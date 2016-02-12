@@ -10,7 +10,7 @@ import java.io.BufferedWriter;
 
 /**
  * TextBuddy program allows user to manipulate text in file through basic functions such as
- * add, display, sort, delete, clear, exit.
+ * add, display, search, sort, delete, clear, exit.
  * 
  * Assumptions:
  * File being specified will be a text file.
@@ -25,21 +25,22 @@ import java.io.BufferedWriter;
 
 public class TextBuddy {
     
-    private static final String MESSAGE_USAGE = "Usage: java textbuddy <file path>";
+    private static final String MESSAGE_USAGE = "Usage: java TextBuddy <file path>";
     private static final String MESSAGE_WELCOME = "Welcome to Textbuddy!";
     private static final String MESSAGE_PROMPT = "command: ";
     private static final String MESSAGE_ADDED = "added to %1$s: \"%2$s\"";
     private static final String MESSAGE_EMPTY_FILE = "%1$s is empty";
+    private static final String MESSAGE_SEARCH_FAIL = "nothing contains %1$s";
     private static final String MESSAGE_SORTED = "all content in %1$s is sorted";
     private static final String MESSAGE_DELETED = "deleted from %1$s: \"%2$s\"";
     private static final String MESSAGE_CLEARED = "all content deleted from %1$s";
-    private static final String MESSAGE_INVALID = "Error. Invalid command.";
+    private static final String MESSAGE_INVALID = "error. invalid command.";
     private static final String MESSAGE_EXIT = "Goodbye!";
     
     private static final int PARAM_SIZE_FOR_RUNNING = 1;
     private static final boolean NEW_LINE_ENABLED = true;
     private static final boolean NEW_LINE_DISABLED = false;
-    private static final int FILE_CONTENT_EMPTY = 0;
+    private static final int CONTENT_EMPTY = 0;
     private static final int OFFSET_FOR_ZERO = 1;
     
     private static Scanner scanner = new Scanner(System.in);
@@ -113,6 +114,10 @@ public class TextBuddy {
                 display();
                 break;
                 
+            case "search" :
+            	search();
+            	break;
+            	
             case "sort" :
             	sort();
             	break;
@@ -143,7 +148,7 @@ public class TextBuddy {
     }
     
     private static void display() {
-        if (contents.size() == FILE_CONTENT_EMPTY) {
+        if (contents.size() == CONTENT_EMPTY) {
             showToUser((String.format(MESSAGE_EMPTY_FILE, fileName)), NEW_LINE_ENABLED);
         } else {
             int index = 1;
@@ -153,6 +158,42 @@ public class TextBuddy {
                 index++;
             }
         }
+    }
+    
+    /**
+     * Search through existing contents that contains the search term
+     */
+    private static void search() {
+    	String searchTerm = scanner.nextLine().trim();
+
+    	ArrayList<String> results = new ArrayList<String>();
+    	results = searching(searchTerm);
+    	displaySearched(results, searchTerm);
+    }
+    
+    private static ArrayList<String> searching(String searchTerm) {
+    	ArrayList<String> results = new ArrayList<String>();
+    	
+    	for (int i = 0; i < contents.size(); i++ ) {
+    		if (contents.get(i).contains(searchTerm)) { 
+    				results.add(contents.get(i));
+    		}
+    	}
+    	
+    	return results;
+    }
+    
+    private static void displaySearched(ArrayList<String> results, String searchTerm) {
+    	if (results.size() == CONTENT_EMPTY ) {
+    		showToUser((String.format(MESSAGE_SEARCH_FAIL, searchTerm)), NEW_LINE_ENABLED);
+    	} else {
+    		 int index = 1;
+             for (int i = 0; i < results.size(); i++) {
+                 showToUser(index + ".", NEW_LINE_DISABLED);
+                 showToUser(results.get(i), NEW_LINE_ENABLED);
+                 index++;
+             }
+    	}
     }
     
     /**
@@ -190,7 +231,7 @@ public class TextBuddy {
      * @return
      */
     private static boolean checkBeforeDelete(int index) {
-        if (contents.size() == FILE_CONTENT_EMPTY) {
+        if (contents.size() == CONTENT_EMPTY) {
             showToUser((String.format(MESSAGE_EMPTY_FILE, fileName)), NEW_LINE_ENABLED);
         }
         
