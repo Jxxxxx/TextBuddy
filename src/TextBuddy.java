@@ -64,7 +64,7 @@ public class TextBuddy {
     /**
      * Checks if the file specified exist
      * If it doesn't, create new file
-     * If it does, read the existing content
+     * If it does, read the existing content until end of file
      * @param fileName
      * @throws IOException
      */
@@ -73,10 +73,11 @@ public class TextBuddy {
         if (!file.exists()) {
             file.createNewFile();
         } else {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
+            BufferedReader reader = new BufferedReader(new FileReader(file));            
             String existing = reader.readLine();
             while (existing != null) {
                 contents.add(existing);
+                existing = reader.readLine();
             }
             reader.close();
         }
