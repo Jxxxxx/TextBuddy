@@ -1,6 +1,5 @@
 import java.util.Scanner;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.io.IOException;
 import java.io.File;
@@ -30,6 +29,7 @@ public class TextBuddy {
     private static final String MESSAGE_PROMPT = "command: ";
     private static final String MESSAGE_ADDED = "added to %1$s: \"%2$s\"";
     private static final String MESSAGE_EMPTY_FILE = "%1$s is empty";
+    private static final String MESSAGE_SORTED = "all content in %1$s is sorted";
     private static final String MESSAGE_DELETED = "deleted from %1$s: \"%2$s\"";
     private static final String MESSAGE_CLEARED = "all content deleted from %1$s";
     private static final String MESSAGE_INVALID = "Error. Invalid command.";
@@ -112,13 +112,13 @@ public class TextBuddy {
                 display();
                 break;
                 
-            case "delete" :
-                delete();
-                break;
-                
             case "sort" :
             	sort();
             	break;
+                
+            case "delete" :
+                delete();
+                break;
                 
             case "clear" :
                 clear();
@@ -154,6 +154,15 @@ public class TextBuddy {
         }
     }
     
+    /**
+	 * Sorts the existing content in array alphabetically
+	 * 
+	 */
+	private static void sort() {
+		 Collections.sort(contents, String.CASE_INSENSITIVE_ORDER);
+		 showToUser((String.format(MESSAGE_SORTED, fileName)), NEW_LINE_ENABLED);
+	}
+	
     private static void delete() {
         int index = getDeleteIndex();
         boolean canDelete = checkBeforeDelete(index);
@@ -199,10 +208,6 @@ public class TextBuddy {
         } else {
             showToUser(MESSAGE_INVALID, NEW_LINE_ENABLED);
         }
-	}
-	
-	private static void sort() {
-		 Collections.sort(contents, String.CASE_INSENSITIVE_ORDER);
 	}
 	
     private static void clear() {
