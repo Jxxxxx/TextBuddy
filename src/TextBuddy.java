@@ -11,12 +11,13 @@ import java.io.BufferedWriter;
 
 /**
  * TextBuddy program allows user to manipulate text in file through basic functions such as
- * add, delete, display, clear, exit.
+ * add, display, sort, delete, clear, exit.
  * 
  * Assumptions:
  * File being specified will be a text file.
  * If the text file being specified exists, it will be in the same directory as the program.
  * User have to exit the program before all the changes made will be saved.
+ * Commands accepted are in lower case.
  * 
  * @author Joleeen
  *
