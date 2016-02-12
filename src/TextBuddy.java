@@ -15,8 +15,9 @@ import java.io.BufferedWriter;
  * Assumptions:
  * File being specified will be a text file.
  * If the text file being specified exists, it will be in the same directory as the program.
- * User have to exit the program before all the changes made will be saved.
  * Commands accepted are in lower case.
+ * User have to exit the program before all the changes made will be saved.
+ * 
  * 
  * @author Joleeen
  *
@@ -156,13 +157,15 @@ public class TextBuddy {
     
     /**
 	 * Sorts the existing content in array alphabetically
-	 * 
 	 */
 	private static void sort() {
 		 Collections.sort(contents, String.CASE_INSENSITIVE_ORDER);
 		 showToUser((String.format(MESSAGE_SORTED, fileName)), NEW_LINE_ENABLED);
 	}
 	
+    /**
+     * Deletes a specific line
+     */
     private static void delete() {
         int index = getDeleteIndex();
         boolean canDelete = checkBeforeDelete(index);
@@ -210,6 +213,10 @@ public class TextBuddy {
         }
 	}
 	
+	
+    /**
+     * Clears all existing contents
+     */
     private static void clear() {
         contents.clear();
         showToUser((String.format(MESSAGE_CLEARED, fileName)), NEW_LINE_ENABLED);
@@ -221,7 +228,6 @@ public class TextBuddy {
 
 	/**
 	 * Writes the existing contents in array list to file in order to save it
-	 * 
 	 * @param fileName
 	 * @throws IOException
 	 */
@@ -245,7 +251,6 @@ public class TextBuddy {
 	
 	/**
 	 * Testing methods below
-	 *
 	 */
 	
 	public static int getLineCount() {
