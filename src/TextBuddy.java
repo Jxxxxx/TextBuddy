@@ -109,10 +109,8 @@ public class TextBuddy {
     }
     
     public static void executeCommand(String command) throws IOException {
-
-    	
         switch (command) {
-            case "add"  :
+            case "add" :
                 add(getInputAfterCommand());
                 break;
                 
@@ -147,15 +145,15 @@ public class TextBuddy {
         }
     }
     
-    public static void add(String input) {
-        contents.add(input);
-        showToUser((String.format(MESSAGE_ADDED, fileName, input)), NEW_LINE_ENABLED);
-    }
-    
     private static String getInputAfterCommand() {
     	return scanner.nextLine().trim();
     }
     
+    public static void add(String input) {
+        contents.add(input);
+        showToUser((String.format(MESSAGE_ADDED, fileName, input)), NEW_LINE_ENABLED);
+    }
+
     public static void display() {
         if (contents.size() == CONTENT_EMPTY) {
             showToUser((String.format(MESSAGE_EMPTY_FILE, fileName)), NEW_LINE_ENABLED);
@@ -221,14 +219,12 @@ public class TextBuddy {
     
     private static int getDeleteIndex() {
         int index = 0;
-        
         try {
             index = scanner.nextInt();
         } catch (Exception e) {
             showToUser(MESSAGE_INVALID, NEW_LINE_ENABLED);
             scanner.next();
         }
-        
         return index;
     }
     
@@ -260,7 +256,6 @@ public class TextBuddy {
             showToUser(MESSAGE_INVALID, NEW_LINE_ENABLED);
         }
     }
-    
     
     /**
      * Clears all existing contents
@@ -295,7 +290,7 @@ public class TextBuddy {
         showToUser(MESSAGE_EXIT, NEW_LINE_ENABLED);
         System.exit(0);
     }
-    
+ 
     
     /**
      * Testing methods below
