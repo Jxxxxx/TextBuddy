@@ -11,14 +11,14 @@ import java.io.BufferedWriter;
 /**
  * TextBuddy program allows user to manipulate text in file through basic functions such as
  * add, display, search, sort, delete, clear, exit.
- * 
+ *
  * Assumptions:
  * File being specified will be a text file.
  * If the text file being specified exists, it will be in the same directory as the program.
  * Commands accepted are in lower case.
  * User have to exit the program before all the changes made will be saved.
- * 
- * 
+ *
+ *
  * @author Joleeen
  *
  */
@@ -49,10 +49,10 @@ public class TextBuddy {
     
     public static void main(String[] args) throws IOException {
         checkProperUsage(args.length);
-        setFileName(args);
+        setFileName(args[0].toString());
         prepareFile(fileName);
         showToUser(MESSAGE_WELCOME, NEW_LINE_ENABLED);
-        askForInput();
+        loopingForInput();
     }
     
     private static void checkProperUsage(int length) {
@@ -61,9 +61,9 @@ public class TextBuddy {
             System.exit(1);
         }
     }
-    
-    private static void setFileName(String[] args) {
-        fileName = args[0];
+   
+    public static void setFileName(String args0) {
+        fileName = args0;
     }
     
     /**
@@ -73,12 +73,12 @@ public class TextBuddy {
      * @param fileName
      * @throws IOException
      */
-    private static void prepareFile(String fileName) throws IOException {
+    public static void prepareFile(String fileName) throws IOException {
         File file = new File(fileName);
         if (!file.exists()) {
             file.createNewFile();
         } else {
-            BufferedReader reader = new BufferedReader(new FileReader(file));            
+            BufferedReader reader = new BufferedReader(new FileReader(file));
             String existing = reader.readLine();
             while (existing != null) {
                 contents.add(existing);
@@ -96,18 +96,24 @@ public class TextBuddy {
         }
     }
     
-    private static void askForInput() throws IOException {
+    private static void loopingForInput() throws IOException {
         while (true) {
-            showToUser(MESSAGE_PROMPT, NEW_LINE_DISABLED);
-            String command = scanner.next();
+            String command = askForInput();
             executeCommand(command);
         }
     }
     
+    private static String askForInput() throws IOException {
+        showToUser(MESSAGE_PROMPT, NEW_LINE_DISABLED);
+        return scanner.next();
+    }
+    
     public static void executeCommand(String command) throws IOException {
+
+    	
         switch (command) {
             case "add"  :
-                add();
+                add(getInputAfterCommand());
                 break;
                 
             case "display" :
@@ -115,15 +121,15 @@ public class TextBuddy {
                 break;
                 
             case "search" :
-            	search();
-            	break;
-            	
+                search(getInputAfterCommand());
+                break;
+                
             case "sort" :
-            	sort();
-            	break;
+                sort();
+                break;
                 
             case "delete" :
-                delete();
+                delete(getDeleteIndex());
                 break;
                 
             case "clear" :
@@ -131,7 +137,7 @@ public class TextBuddy {
                 break;
                 
             case "exit" :
-                save(fileName);
+                save();
                 exit();
                 break;
                 
@@ -141,13 +147,16 @@ public class TextBuddy {
         }
     }
     
-    private static void add() {
-        String input = scanner.nextLine().trim();
+    public static void add(String input) {
         contents.add(input);
         showToUser((String.format(MESSAGE_ADDED, fileName, input)), NEW_LINE_ENABLED);
     }
     
-    private static void display() {
+    private static String getInputAfterCommand() {
+    	return scanner.nextLine().trim();
+    }
+    
+    public static void display() {
         if (contents.size() == CONTENT_EMPTY) {
             showToUser((String.format(MESSAGE_EMPTY_FILE, fileName)), NEW_LINE_ENABLED);
         } else {
@@ -163,67 +172,65 @@ public class TextBuddy {
     /**
      * Search through existing contents that contains the search term
      */
-    private static void search() {
-    	String searchTerm = scanner.nextLine().trim();
-
-    	ArrayList<String> results = new ArrayList<String>();
-    	results = searching(searchTerm);
-    	displaySearched(results, searchTerm);
+    public static void search(String searchTerm) {       
+        ArrayList<String> results = new ArrayList<String>();
+        results = searching(searchTerm);
+        displaySearched(results, searchTerm);
     }
     
-    private static ArrayList<String> searching(String searchTerm) {
-    	ArrayList<String> results = new ArrayList<String>();
-    	
-    	for (int i = 0; i < contents.size(); i++ ) {
-    		if (contents.get(i).contains(searchTerm)) { 
-    				results.add(contents.get(i));
-    		}
-    	}
-    	
-    	return results;
+    public static ArrayList<String> searching(String searchTerm) {
+        ArrayList<String> results = new ArrayList<String>();
+        
+        for (int i = 0; i < contents.size(); i++ ) {
+            if (contents.get(i).toLowerCase().contains(searchTerm.toLowerCase())) {
+                results.add(contents.get(i));
+            }
+        }
+        
+        return results;
     }
     
     private static void displaySearched(ArrayList<String> results, String searchTerm) {
-    	if (results.size() == CONTENT_EMPTY ) {
-    		showToUser((String.format(MESSAGE_SEARCH_FAIL, searchTerm)), NEW_LINE_ENABLED);
-    	} else {
-    		 int index = 1;
-             for (int i = 0; i < results.size(); i++) {
-                 showToUser(index + ".", NEW_LINE_DISABLED);
-                 showToUser(results.get(i), NEW_LINE_ENABLED);
-                 index++;
-             }
-    	}
+        if (results.size() == CONTENT_EMPTY ) {
+            showToUser((String.format(MESSAGE_SEARCH_FAIL, searchTerm)), NEW_LINE_ENABLED);
+        } else {
+            int index = 1;
+            for (int i = 0; i < results.size(); i++) {
+                showToUser(index + ".", NEW_LINE_DISABLED);
+                showToUser(results.get(i), NEW_LINE_ENABLED);
+                index++;
+            }
+        }
     }
     
     /**
-	 * Sorts the existing content in array alphabetically
-	 */
-	private static void sort() {
-		 Collections.sort(contents, String.CASE_INSENSITIVE_ORDER);
-		 showToUser((String.format(MESSAGE_SORTED, fileName)), NEW_LINE_ENABLED);
-	}
-	
+     * Sorts the existing content in array alphabetically
+     */
+    public static void sort() {
+        Collections.sort(contents, String.CASE_INSENSITIVE_ORDER);
+        showToUser((String.format(MESSAGE_SORTED, fileName)), NEW_LINE_ENABLED);
+    }
+    
     /**
      * Deletes a specific line
      */
-    private static void delete() {
-        int index = getDeleteIndex();
+    public static void delete(int index) {
         boolean canDelete = checkBeforeDelete(index);
         deleting(index, canDelete);
     }
-
+    
     private static int getDeleteIndex() {
-		int index = 0;     
-		
+        int index = 0;
+        
         try {
             index = scanner.nextInt();
         } catch (Exception e) {
             showToUser(MESSAGE_INVALID, NEW_LINE_ENABLED);
             scanner.next();
         }
-		return index;
-	}
+        
+        return index;
+    }
     
     /**
      * Check that file is not empty, or that index specify is not out of range
@@ -244,36 +251,36 @@ public class TextBuddy {
         return true;
     }
     
-	private static void deleting(int index, boolean canDelete) {
-		if (canDelete) {
-        	index = index - OFFSET_FOR_ZERO;
+    private static void deleting(int index, boolean canDelete) {
+        if (canDelete) {
+            index = index - OFFSET_FOR_ZERO;
             String deleted = contents.remove(index);
             showToUser((String.format(MESSAGE_DELETED, fileName, deleted)), NEW_LINE_ENABLED);
         } else {
             showToUser(MESSAGE_INVALID, NEW_LINE_ENABLED);
         }
-	}
-	
-	
+    }
+    
+    
     /**
      * Clears all existing contents
      */
-    private static void clear() {
+    public static void clear() {
         contents.clear();
         showToUser((String.format(MESSAGE_CLEARED, fileName)), NEW_LINE_ENABLED);
     }
     
-    private static void save(String fileName) throws IOException {
+    public static void save() throws IOException {
         writeToFile(fileName);
     }
-
-	/**
-	 * Writes the existing contents in array list to file in order to save it
-	 * @param fileName
-	 * @throws IOException
-	 */
-	private static void writeToFile(String fileName) throws IOException {
-		File file = new File(fileName);
+    
+    /**
+     * Writes the existing contents in array list to file in order to save it
+     * @param fileName
+     * @throws IOException
+     */
+    private static void writeToFile(String fileName) throws IOException {
+        File file = new File(fileName);
         BufferedWriter writer = new BufferedWriter(new FileWriter(file));
         
         for (int i = 0; i < contents.size(); i++) {
@@ -282,19 +289,22 @@ public class TextBuddy {
         }
         
         writer.close();
-	}
-	
-	private static void exit() {
-    	showToUser(MESSAGE_EXIT, NEW_LINE_ENABLED);
-    	System.exit(0);
     }
-	
-	
-	/**
-	 * Testing methods below
-	 */
-	
-	public static int getLineCount() {
-		return contents.size();
-	}
+    
+    private static void exit() {
+        showToUser(MESSAGE_EXIT, NEW_LINE_ENABLED);
+        System.exit(0);
+    }
+    
+    
+    /**
+     * Testing methods below
+     */    
+    public static ArrayList<String> getContents() {
+    	return contents;
+    }
+    
+    public static int getLineCount() {
+        return contents.size();
+    }
 }
